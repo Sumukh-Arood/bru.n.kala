@@ -1051,7 +1051,7 @@
         </div>
         <div class="strip" id="${stripId}">
           ${files.map((f, i) => `
-            <div class="tile" onclick="openLightbox('${f}')">
+            <div class="tile">
               <div class="badge">${s.badge}</div>
               <img class="tileImg" src="${f}" alt="${s.title}" loading="lazy">
               <div class="tileBody">
@@ -1109,36 +1109,30 @@
       mouse.x = e.clientX;
       mouse.y = e.clientY;
     });
-    // Reset mouse when leaving window so particles don't get stuck
     document.addEventListener('mouseleave', () => { mouse.x = -100; mouse.y = -100; });
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobile = window.innerWidth < 800; // Broader mobile check
 
-    // Config based on device
-    const isMobile = window.innerWidth < 600;
-    const PARTICLE_COUNT = isMobile ? 25 : 55; // Fewer on mobile for perf
-    const CONNECT_DIST = isMobile ? 110 : 160;   // Connect distance
-    const MOUSE_DIST = 180;                      // Mouse interaction radius
+    // Config
+    const PARTICLE_COUNT = isMobile ? 30 : 60;
+    const CONNECT_DIST = isMobile ? 120 : 180;
+    const MOUSE_DIST = 200;
 
     class Particle {
-      constructor() {
-        this.restart(true);
-      }
-
+      constructor() { this.restart(true); }
       restart(randomY = false) {
         this.x = Math.random() * window.innerWidth;
         this.y = randomY ? Math.random() * window.innerHeight : -10;
         this.vx = (Math.random() - 0.5) * 0.8;
-        this.vy = (Math.random() * 0.5) + 0.2; // Always fall down slowly
-        this.size = Math.random() * 2 + 1;
+        this.vy = (Math.random() * 0.5) + 0.3;
+        this.size = Math.random() * 2.5 + 1.5;
       }
-
       update() {
-        // Standard movement
         this.x += this.vx;
         this.y += this.vy;
 
-        // Mouse interaction (repulsion)
+        // Mouse interaction
         const dx = mouse.x - this.x;
         const dy = mouse.y - this.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -1146,17 +1140,15 @@
         if (dist < MOUSE_DIST) {
           const force = (MOUSE_DIST - dist) / MOUSE_DIST;
           const angle = Math.atan2(dy, dx);
-          const push = force * 2; // Strength
+          const push = force * 4; // Stronger push
           this.x -= Math.cos(angle) * push;
           this.y -= Math.sin(angle) * push;
         }
 
-        // Wrap around
         if (this.x < -50) this.x = window.innerWidth + 50;
         if (this.x > window.innerWidth + 50) this.x = -50;
         if (this.y > window.innerHeight + 50) this.restart(false);
       }
-
       draw(col) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -1172,18 +1164,16 @@
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
       const isDark = root.getAttribute('data-theme') === 'dark';
-      // Colors
-      const dotCol = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(94,83,67,0.15)';
-      const lineCol = isDark ? '255,255,255' : '94,83,67'; // RGB values for line alpha manipulation
+      // Increased Visibility here
+      const dotCol = isDark ? 'rgba(255,255,255,0.5)' : 'rgba(94,83,67,0.4)';
+      const lineCol = isDark ? '255,255,255' : '94,83,67';
 
-      // Update & Draw Dots
       particles.forEach(p => {
         p.update();
         p.draw(dotCol);
       });
 
-      // Draw Lines
-      ctx.lineWidth = 0.5;
+      ctx.lineWidth = 0.8; // Thicker lines
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const p1 = particles[i];
@@ -1195,17 +1185,74 @@
           if (dist < CONNECT_DIST) {
             const alpha = 1 - (dist / CONNECT_DIST);
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(${lineCol}, ${alpha * 0.15})`; // Very subtle lines
+            ctx.strokeStyle = `rgba(${lineCol}, ${alpha * 0.25})`; // More opaque lines
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
             ctx.stroke();
           }
         }
       }
-
       requestAnimationFrame(loop);
     }
     loop();
+
+    /* ========= PREMIUM INTERACTIONS (Desktop Only) ========= */
+    if (!isMobile && !prefersReduced) {
+
+      // 1. Magnetic Buttons
+      const magnets = document.querySelectorAll('.btn, .arrowBtn, .logoImg');
+      magnets.forEach(btn => {
+        btn.addEventListener('mousemove', e => {
+          const rect = btn.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          // Pull button towards mouse
+          btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) scale(1.02)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = '';
+        });
+      });
+
+      // 2. 3D Tilt Cards
+      // We use event delegation for performance on the existing MutationObserver or just attach to created ones?
+      // Since tiles are created dynamically, we attach listeners via the container or just wait.
+      // Easiest is to add a global listener that checks target.
+      document.addEventListener('mousemove', e => {
+        const tile = e.target.closest('.tile');
+        if (!tile) return;
+
+        const rect = tile.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Calculate rotation (max 10deg)
+        const xPct = (x / rect.width - 0.5) * 2; // -1 to 1
+        const yPct = (y / rect.height - 0.5) * 2;
+
+        tile.style.transform = `
+          perspective(800px)
+          rotateY(${xPct * 4}deg)
+          rotateX(${-yPct * 4}deg)
+          scale(1.02)
+        `;
+      });
+
+      document.addEventListener('mouseout', e => {
+        const tile = e.target.closest('.tile');
+        if (tile) tile.style.transform = '';
+      });
+    }
+
+    // Fix Mobile Lightbox: Event Delegation
+    // Replaces the inline 'onclick' which can be flaky
+    portfolio.addEventListener('click', e => {
+      const tile = e.target.closest('.tile');
+      if (tile) {
+        const img = tile.querySelector('img');
+        if (img && img.src) openLightbox(img.src);
+      }
+    });
   </script>
 </body>
 
