@@ -293,10 +293,10 @@
     .toggle {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       border: 1px solid var(--stroke);
       background: rgba(244, 241, 232, .5);
-      padding: 6px 8px 6px 12px;
+      padding: 4px 6px 4px 10px;
       border-radius: 999px;
       user-select: none;
       flex: 0 0 auto;
@@ -315,8 +315,8 @@
     }
 
     .switch {
-      width: 42px;
-      height: 24px;
+      width: 32px;
+      height: 18px;
       border-radius: 999px;
       border: 1px solid var(--stroke);
       background: rgba(94, 83, 67, .12);
@@ -330,19 +330,19 @@
     }
 
     .knob {
-      width: 18px;
-      height: 18px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       background: #fff;
       position: absolute;
-      top: 2px;
-      left: 2px;
+      top: 1px;
+      left: 1px;
       transition: transform .4s var(--bounce);
       box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
     }
 
     html[data-theme="dark"] .knob {
-      transform: translateX(18px);
+      transform: translateX(14px);
       background: #f4f1e8;
     }
 
@@ -406,6 +406,14 @@
       transition: transform .4s var(--bounce), box-shadow .3s ease, background .2s;
       cursor: pointer;
       text-transform: capitalize;
+      gap: 8px;
+      /* Space between icon and text */
+    }
+
+    .btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
     }
 
     html[data-theme="dark"] .btn {
@@ -698,6 +706,9 @@
     }
 
     .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
       justify-content: center;
       margin-top: 24px;
     }
@@ -875,12 +886,28 @@
           </p>
 
           <div class="ctaRow">
-            <a class="btn primary" href="https://ig.me/m/bru.n.kala" target="_blank" rel="noreferrer">DM to order
-              (Instagram)</a>
+            <a class="btn primary" href="https://ig.me/m/bru.n.kala" target="_blank" rel="noreferrer">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+              </svg>
+              DM to order
+            </a>
             <a class="btn" href="https://www.instagram.com/bru.n.kala?igsh=ZGozeXRtZnpvaGxp&utm_source=qr"
-              target="_blank" rel="noreferrer">Instagram</a>
-            <a class="btn" href="https://youtube.com/@bruandkala?si=n5VPnbCkMmiKOGE8" target="_blank"
-              rel="noreferrer">YouTube</a>
+              target="_blank" rel="noreferrer">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z" />
+              </svg>
+              Instagram
+            </a>
+            <a class="btn" href="https://youtube.com/@bruandkala?si=n5VPnbCkMmiKOGE8" target="_blank" rel="noreferrer">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+              </svg>
+              YouTube
+            </a>
           </div>
         </div>
 
@@ -921,11 +948,28 @@
       </p>
 
       <div class="links">
-        <a class="btn primary" href="https://ig.me/m/bru.n.kala" target="_blank" rel="noreferrer">DM to order</a>
+        <a class="btn primary" href="https://ig.me/m/bru.n.kala" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+          </svg>
+          DM to order
+        </a>
         <a class="btn" href="https://www.instagram.com/bru.n.kala?igsh=ZGozeXRtZnpvaGxp&utm_source=qr" target="_blank"
-          rel="noreferrer">Instagram</a>
-        <a class="btn" href="https://youtube.com/@bruandkala?si=n5VPnbCkMmiKOGE8" target="_blank"
-          rel="noreferrer">YouTube</a>
+          rel="noreferrer">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z" />
+          </svg>
+          Instagram
+        </a>
+        <a class="btn" href="https://youtube.com/@bruandkala?si=n5VPnbCkMmiKOGE8" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+          </svg>
+          YouTube
+        </a>
       </div>
 
       <p style="font-size:12px;opacity:.85;margin-top:10px;">
@@ -1011,7 +1055,7 @@
     const sections = [
       { title: "Sling Bags", badge: "CROCHET", prefix: "bag-", count: 2 },
       { title: "Bunny", badge: "CROCHET", prefix: "bunny-single-", count: 2 },
-      { title: "Mat cum Rose Bouquet", badge: "CROCHET", prefix: "bouquet-", count: 3 },
+      { title: "Mat & Rose Bouquet", badge: "CROCHET", prefix: "bouquet-", count: 3 },
       { title: "Bunny + Heart", badge: "CROCHET", files: ["images/bunny-heart-simple-01.jpg"] },
       { title: "Simple Heart", badge: "CROCHET", files: ["images/heart-01.jpg"] },
       { title: "Bunny + Rose Stem", badge: "CROCHET", prefix: "bunny-heart-rose-", count: 2 },
