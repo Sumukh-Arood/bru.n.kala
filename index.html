@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>BrunKala — Crochet & Art</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@300;400;500;600&family=Parisienne&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#FFFCF5;
+      --paper:#F4F1E8;
+      --paper2:#EFE9E4;
+      --ink:#5E5343;
+      --stroke:rgba(94,83,67,.18);
+      --glass:rgba(255,252,245,.72);
+      --shadow:0 18px 56px rgba(94,83,67,.12);
+      --shadow2:0 26px 92px rgba(94,83,67,.14);
+      --radius:22px;
+      --serif:"DM Serif Display",serif;
+      --script:"Parisienne",cursive;
+      --sans:"Montserrat",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      --max:1100px;
+      --ease:cubic-bezier(.2,.8,.2,1);
+    }
+
+    html[data-theme="dark"]{
+      --bg:#12100f;
+      --paper:#1B1714;
+      --paper2:#241F19;
+      --ink:#F4F1E8;
+      --stroke:rgba(244,241,232,.14);
+      --glass:rgba(18,16,15,.62);
+      --shadow:0 20px 72px rgba(0,0,0,.38);
+      --shadow2:0 26px 92px rgba(0,0,0,.48);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--ink);
+      background:var(--bg);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+
+      /* ✅ prevents browser "scroll anchoring" jumping you to Drawings after reload */
+      overflow-anchor: none;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    /* ===== Premium background ===== */
+    .bg{position:fixed; inset:0; z-index:-4; pointer-events:none; overflow:hidden;}
+    .bg::before{
+      content:"";
+      position:absolute; inset:-40%;
+      background:
+        radial-gradient(950px 700px at 12% 10%, rgba(239,233,228,.95), transparent 60%),
+        radial-gradient(900px 700px at 90% 20%, rgba(244,241,232,.82), transparent 62%),
+        radial-gradient(1200px 800px at 55% 92%, rgba(239,233,228,.62), transparent 64%),
+        linear-gradient(120deg, rgba(255,252,245,0), rgba(244,241,232,.35), rgba(255,252,245,0));
+      animation: wash 10s var(--ease) infinite alternate;
+      transform: translate3d(0,0,0);
+    }
+    html[data-theme="dark"] .bg::before{
+      background:
+        radial-gradient(950px 700px at 12% 10%, rgba(244,241,232,.11), transparent 60%),
+        radial-gradient(900px 700px at 90% 20%, rgba(244,241,232,.07), transparent 62%),
+        radial-gradient(1200px 800px at 55% 92%, rgba(239,233,228,.05), transparent 64%),
+        linear-gradient(120deg, rgba(18,16,15,0), rgba(244,241,232,.05), rgba(18,16,15,0));
+    }
+    @keyframes wash{
+      0%{transform:translate(-1.6%,-1.2%) scale(1)}
+      50%{transform:translate(1.4%,1.2%) scale(1.03)}
+      100%{transform:translate(-1.0%,2.0%) scale(1.05)}
+    }
+
+    .ribbons{
+      position:absolute; inset:-20%;
+      background:
+        radial-gradient(650px 220px at 20% 30%, rgba(94,83,67,.07), transparent 65%),
+        radial-gradient(760px 240px at 80% 42%, rgba(94,83,67,.06), transparent 65%),
+        radial-gradient(720px 220px at 45% 80%, rgba(94,83,67,.05), transparent 65%);
+      filter: blur(7px);
+      opacity:.85;
+      animation: ribbons 8.5s var(--ease) infinite alternate;
+    }
+    html[data-theme="dark"] .ribbons{
+      background:
+        radial-gradient(650px 220px at 20% 30%, rgba(244,241,232,.06), transparent 65%),
+        radial-gradient(760px 240px at 80% 42%, rgba(244,241,232,.05), transparent 65%),
+        radial-gradient(720px 220px at 45% 80%, rgba(244,241,232,.04), transparent 65%);
+      opacity:.70;
+    }
+    @keyframes ribbons{
+      0%{transform:translate(-1%,0%) rotate(-2deg)}
+      50%{transform:translate(1.5%,1%) rotate(2deg)}
+      100%{transform:translate(-.5%,2%) rotate(-1deg)}
+    }
+
+    /* background video (optional bg.mp4) */
+    .bg video{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      opacity:.14;
+      filter:saturate(.9) contrast(.95) blur(.5px);
+      transform:scale(1.06);
+      display:none;
+    }
+    html[data-theme="dark"] .bg video{opacity:.16}
+
+    .grain{
+      position:fixed; inset:0; z-index:-3;
+      pointer-events:none;
+      opacity:.07;
+      mix-blend-mode:multiply;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      background-size:180px 180px;
+      animation: grainMove 6s steps(6) infinite;
+    }
+    html[data-theme="dark"] .grain{opacity:.06; mix-blend-mode:screen;}
+    @keyframes grainMove{
+      0%{transform:translate(0,0)}
+      20%{transform:translate(-2%,1%)}
+      40%{transform:translate(2%,-1%)}
+      60%{transform:translate(-1%,2%)}
+      80%{transform:translate(1%,-2%)}
+      100%{transform:translate(0,0)}
+    }
+
+    #particles{position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.6;}
+    html[data-theme="dark"] #particles{opacity:.48;}
+
+    /* ===== Layout ===== */
+    .wrap{max-width:var(--max); margin:0 auto; padding:14px 14px 72px; overflow-anchor:none;}
+    .topbar{
+      position:sticky; top:10px; z-index:50;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      margin:8px 0 14px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:var(--glass);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 12px 30px rgba(94,83,67,.10);
+    }
+    html[data-theme="dark"] .topbar{box-shadow:0 14px 36px rgba(0,0,0,.40);}
+
+    .brand{display:flex; align-items:center; gap:12px; min-width:0;}
+
+    .logoImg{
+      width:56px; height:56px;
+      border-radius:18px;
+      border:1px solid var(--stroke);
+      background: rgba(244,241,232,.6);
+      object-fit:contain;
+      padding:6px;
+      box-shadow: 0 12px 26px rgba(94,83,67,.12);
+      flex:0 0 auto;
+    }
+    html[data-theme="dark"] .logoImg{
+      background: #ffffff;
+      border-color: rgba(244,241,232,.18);
+      box-shadow: 0 14px 30px rgba(0,0,0,.35);
+    }
+
+    .wordmark{display:flex; flex-direction:column; line-height:1.05; min-width:0;}
+    .wordmark .name{font-family:var(--serif); font-size:26px; letter-spacing:.7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .wordmark .tag{font-family:var(--script); font-size:15px; opacity:.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
+    .toggle{
+      display:flex; align-items:center; gap:8px;
+      border:1px solid var(--stroke);
+      background: rgba(244,241,232,.55);
+      padding:6px 8px;
+      border-radius:999px;
+      user-select:none;
+      flex:0 0 auto;
+    }
+    html[data-theme="dark"] .toggle{background: rgba(34,30,25,.62);}
+    .themeText{font-size:11px; font-weight:600; opacity:.9;}
+    .switch{
+      width:38px; height:20px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background: rgba(94,83,67,.22);
+      position:relative;
+      cursor:pointer;
+    }
+    html[data-theme="dark"] .switch{background: rgba(244,241,232,.16);}
+    .knob{
+      width:16px; height:16px;
+      border-radius:50%;
+      background: rgba(255,252,245,.98);
+      position:absolute; top:1px; left:1px;
+      transition: transform .35s var(--ease);
+      box-shadow: 0 8px 18px rgba(0,0,0,.12);
+    }
+    html[data-theme="dark"] .knob{transform: translateX(18px); background: rgba(244,241,232,.95);}
+
+    /* ===== Hero ===== */
+    .hero{
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(244,241,232,.90), rgba(239,233,228,.72));
+      box-shadow: var(--shadow);
+      padding:16px;
+      overflow:hidden;
+      position:relative;
+      transform: translate3d(0, calc(var(--parY, 0px) * .25), 0);
+      transition: transform .12s linear;
+    }
+    html[data-theme="dark"] .hero{background: linear-gradient(180deg, rgba(34,30,25,.75), rgba(27,23,20,.70)); box-shadow: var(--shadow2);}
+    .heroGrid{display:grid; grid-template-columns: 1fr; gap:14px; align-items:start;}
+    .headline{font-family:var(--serif); font-size:34px; line-height:1.06; margin:2px 0 8px; letter-spacing:.3px;}
+    .sub{margin:0; font-size:14px; line-height:1.6; opacity:.92; max-width:60ch;}
+    .ctaRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+    .btn{
+      border:1px solid var(--stroke);
+      background: rgba(255,252,245,.82);
+      padding:12px 14px;
+      border-radius:999px;
+      font-weight:600;
+      font-size:13px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 12px 26px rgba(94,83,67,.10);
+      transition: transform .22s var(--ease), box-shadow .22s var(--ease);
+      touch-action:manipulation;
+    }
+    html[data-theme="dark"] .btn{background: rgba(18,16,15,.42); box-shadow: 0 16px 34px rgba(0,0,0,.40);}
+    .btn.primary{background: rgba(94,83,67,.92); border-color: rgba(94,83,67,.92); color: var(--bg);}
+    html[data-theme="dark"] .btn.primary{background: rgba(244,241,232,.92); border-color: rgba(244,241,232,.92); color:#12100f;}
+    .btn:active{transform: translateY(1px) scale(.98);}
+
+    .sideStack{display:grid; gap:12px;}
+    .panel{
+      border-radius: calc(var(--radius) - 6px);
+      border:1px solid var(--stroke);
+      background: rgba(255,252,245,.62);
+      box-shadow: 0 14px 34px rgba(94,83,67,.08);
+      padding:14px;
+      transform: translate3d(0, calc(var(--parY, 0px) * .18), 0);
+      transition: transform .12s linear;
+    }
+    html[data-theme="dark"] .panel{background: rgba(18,16,15,.45); box-shadow: 0 18px 44px rgba(0,0,0,.30);}
+    .creator{display:flex; gap:12px; align-items:center;}
+    .avatar{width:62px; height:62px; border-radius:18px; object-fit:cover; border:1px solid var(--stroke); background: rgba(244,241,232,.6); flex:0 0 auto;}
+    .creator h3{margin:0; font-family:var(--serif); font-size:18px; line-height:1.15;}
+    .creator p{margin:6px 0 0; font-size:12.5px; opacity:.92; line-height:1.5;}
+    .miniTitle{font-family:var(--script); font-size:22px; margin:0 0 12px; opacity:.92;}
+    .stats{display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
+    .stat{border-radius:18px; border:1px solid rgba(94,83,67,.14); background: rgba(244,241,232,.55); padding:14px;}
+    html[data-theme="dark"] .stat{border-color: rgba(244,241,232,.12); background: rgba(34,30,25,.50);}
+    .stat b{display:block; font-size:18px}
+    .stat span{display:block; margin-top:6px; font-size:14px; opacity:.88;}
+
+    /* ===== Portfolio scroll sections ===== */
+    .section{ margin-top:18px; padding-top:6px; }
+    .sectionHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin: 14px 2px 10px;
+    }
+    .sectionHeadLeft{display:flex; flex-direction:column; gap:2px;}
+    .sectionHead h2{margin:0; font-family:var(--serif); font-size:22px;}
+    .sectionHead .subNote{margin:0; font-size:12px; opacity:.9}
+
+    .arrows{display:flex; gap:8px; flex:0 0 auto;}
+    .arrowBtn{
+      width:38px; height:38px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,252,245,.70);
+      box-shadow: 0 10px 22px rgba(94,83,67,.10);
+      display:grid; place-items:center;
+      font-size:18px;
+      font-weight:700;
+      cursor:pointer;
+      touch-action:manipulation;
+      transition: transform .18s var(--ease);
+    }
+    html[data-theme="dark"] .arrowBtn{
+      background: rgba(18,16,15,.55);
+      box-shadow: 0 14px 28px rgba(0,0,0,.35);
+    }
+    .arrowBtn:active{transform: scale(.96);}
+
+    .strip{
+      display:flex;
+      gap:12px;
+      overflow-x:auto;
+      padding: 6px 2px 12px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      overflow-anchor: none;
+    }
+    .strip::-webkit-scrollbar{display:none}
+    .strip:focus-within .tile{transition: transform .22s var(--ease), box-shadow .22s var(--ease);}
+
+    .tile{
+      flex: 0 0 auto;
+      width: 72%;
+      max-width: 320px;
+      scroll-snap-align: start;
+
+      border-radius: var(--radius);
+      border:1px solid var(--stroke);
+      background: rgba(255,252,245,.65);
+      box-shadow: 0 12px 26px rgba(94,83,67,.10);
+      overflow:hidden;
+      position:relative;
+
+      transform: translate3d(0, calc(var(--parY, 0px) * .10), 0);
+      transition: transform .12s linear;
+      overflow-anchor:none;
+    }
+    html[data-theme="dark"] .tile{background: rgba(18,16,15,.45); box-shadow: 0 16px 34px rgba(0,0,0,.40);}
+
+    .tileImg{width:100%; aspect-ratio: 1 / 1; object-fit: cover; background: rgba(244,241,232,.6);}
+    .tileBody{padding: 12px 12px 14px}
+    .tileTitle{margin:0 0 6px; font-size:14px; font-weight:600}
+    .meta{display:flex; gap:8px; flex-wrap:wrap; font-size:12px; opacity:.92}
+    .pill{padding:6px 10px; border-radius:999px; border:1px solid var(--stroke); background: rgba(244,241,232,.7);}
+    html[data-theme="dark"] .pill{ background: rgba(34,30,25,.55); }
+
+    .badge{
+      position:absolute; top:10px; left:10px;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:700;
+      border:1px solid var(--stroke);
+      background: rgba(255,252,245,.82);
+      backdrop-filter: blur(8px);
+    }
+    html[data-theme="dark"] .badge{ background: rgba(18,16,15,.72); }
+
+    .footer{
+      margin-top:22px;
+      padding:16px;
+      border-radius: var(--radius);
+      border:1px solid var(--stroke);
+      background: rgba(244,241,232,.70);
+      box-shadow: 0 14px 34px rgba(94,83,67,.08);
+      transform: translate3d(0, calc(var(--parY, 0px) * .08), 0);
+      transition: transform .12s linear;
+      overflow-anchor:none;
+    }
+    html[data-theme="dark"] .footer{ background: rgba(34,30,25,.55); box-shadow: 0 18px 44px rgba(0,0,0,.28); }
+    .footer h3{margin:0; font-family:var(--serif); font-size:18px;}
+    .footer p{margin:10px 0 0; font-size:13px; opacity:.94; line-height:1.55;}
+    .links{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+
+    .reveal{opacity:0; transform: translateY(18px); transition: opacity .85s var(--ease), transform .85s var(--ease); will-change: opacity, transform;}
+    .reveal.show{opacity:1; transform: translateY(0);}
+
+    @media (min-width: 860px){
+      .wrap{padding: 22px 18px 78px}
+      .hero{padding:22px}
+      .heroGrid{grid-template-columns: 1.15fr .85fr; gap:18px}
+      .headline{font-size:48px}
+      .logoImg{width:64px;height:64px}
+      .wordmark .name{font-size:32px}
+      .tile{width: 280px;}
+      .arrowBtn{width:40px;height:40px}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .reveal{transition:none}
+      .grain{animation:none}
+      .bg::before,.ribbons{animation:none}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="ribbons"></div>
+    <video id="bgVideo" autoplay muted loop playsinline></video>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <header class="topbar reveal show" id="topbar">
+      <div class="brand">
+        <img class="logoImg" src="images/logo.png" alt="BrunKala logo">
+        <div class="wordmark">
+          <div class="name">BrunKala</div>
+          <div class="tag">crochet • paintings • handmade</div>
+        </div>
+      </div>
+
+      <div class="toggle" role="group" aria-label="Theme toggle">
+        <span class="themeText" id="themeState">Light</span>
+        <div class="switch" id="themeSwitch" role="switch" aria-label="Toggle theme" aria-checked="false" tabindex="0">
+          <div class="knob"></div>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero reveal show" id="home">
+      <div class="heroGrid">
+        <div class="reveal show">
+          <h1 class="headline">A soft, handmade world — made by me ✨</h1>
+          <p class="sub">
+            Crochet pieces & paintings crafted with calm colors and tiny details.
+            Browse my work below — for orders, I currently take them through Instagram DM.
+          </p>
+
+          <div class="ctaRow">
+            <a class="btn primary" href="https://ig.me/m/bru.n.kala" target="_blank" rel="noreferrer">DM to order (Instagram)</a>
+            <a class="btn" href="https://www.instagram.com/bru.n.kala?igsh=ZGozeXRtZnpvaGxp&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a>
+            <a class="btn" href="https://youtube.com/@bruandkala?si=n5VPnbCkMmiKOGE8" target="_blank" rel="noreferrer">YouTube</a>
+          </div>
+        </div>
+
+        <div class="sideStack">
+          <div class="panel creator reveal">
+            <img class="avatar" src="images/profile.jpg" alt="Creator photo">
+            <div>
+              <h3>Hi, I’m the creator ✿</h3>
+              <p>
+                I make crochet pieces (bunny, teddy, hearts, sling bags) and paintings.
+                If you want something similar, DM me — custom colors are possible.
+              </p>
+            </div>
+          </div>
+
+          <div class="panel reveal">
+            <p class="miniTitle">Quick info</p>
+            <div class="stats">
+              <div class="stat"><b>Orders</b><span>Instagram DM only</span></div>
+              <div class="stat"><b>Custom</b><span>colors & small changes</span></div>
+              <div class="stat"><b>Handmade</b><span>every piece unique</span></div>
+              <div class="stat"><b>Delivery</b><span>India</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div id="portfolio"></div>
+
+    <section class="footer reveal" id="order">
+      <h3>Want to order something?</h3>
+      <p>
+        <b>As of now, I take all orders through Instagram DM.</b> I currently deliver within <b>India</b> 🇮🇳
+        A new website for easy ordering is <b>coming soon</b> — till then DM me with:
+        <b>item name</b> + <b>color preference</b> + <b>city</b>.
+      </p>
+
+      <div class="links">
+        <a class="btn primary" href="https://ig.me/m/bru.n.kala" target="_blank" rel="noreferrer">DM to order</a>
+        <a class="btn" href="https://www.instagram.com/bru.n.kala?igsh=ZGozeXRtZnpvaGxp&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a>
+        <a class="btn" href="https://youtube.com/@bruandkala?si=n5VPnbCkMmiKOGE8" target="_blank" rel="noreferrer">YouTube</a>
+      </div>
+
+      <p style="font-size:12px;opacity:.85;margin-top:10px;">
+        BrunKala • handmade crochet & art
+      </p>
+    </section>
+  </div>
+
+  <script>
+    /* ========= FORCE START FROM TOP (fixes "reload opens at Drawings") ========= */
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+    function forceTop(){
+      // remove any #hash that can jump you down
+      if (location.hash) {
+        history.replaceState(null, "", location.pathname + location.search);
+      }
+
+      // do multiple passes because mobile browsers restore scroll after scripts
+      window.scrollTo(0,0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      requestAnimationFrame(() => {
+        window.scrollTo(0,0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+
+        setTimeout(() => {
+          window.scrollTo(0,0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }, 60);
+      });
+    }
+
+    window.addEventListener("pageshow", forceTop, { passive:true });
+    window.addEventListener("load", forceTop, { passive:true });
+
+    /* ========= Start in LIGHT always ========= */
+    localStorage.removeItem("brunkala_theme");
+
+    const root = document.documentElement;
+    const switchEl = document.getElementById("themeSwitch");
+    const themeState = document.getElementById("themeState");
+
+    function applyTheme(theme){
+      root.setAttribute("data-theme", theme);
+      const isDark = theme === "dark";
+      switchEl.setAttribute("aria-checked", String(isDark));
+      themeState.textContent = isDark ? "Dark" : "Light";
+      localStorage.setItem("brunkala_theme", theme);
+    }
+    applyTheme("light");
+
+    function toggleTheme(){
+      const current = root.getAttribute("data-theme") || "light";
+      applyTheme(current === "light" ? "dark" : "light");
+    }
+    switchEl.addEventListener("click", toggleTheme);
+    switchEl.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        toggleTheme();
+      }
+    });
+
+    /* ========= Reveal animations ========= */
+    const revealEls = Array.from(document.querySelectorAll(".reveal"));
+    document.querySelectorAll("#home .reveal").forEach(el => el.classList.add("show"));
+    const io = new IntersectionObserver((entries) => {
+      for(const entry of entries){
+        if(entry.isIntersecting){
+          entry.target.classList.add("show");
+          io.unobserve(entry.target);
+        }
+      }
+    }, { threshold: 0.12, rootMargin: "0px 0px -10% 0px" });
+    revealEls.forEach(el => io.observe(el));
+
+    /* ========= Scroll movement (parallax depth) ========= */
+    let lastY = window.scrollY;
+    function onScroll(){
+      const y = window.scrollY;
+      const delta = y - lastY;
+      lastY = y;
+
+      const cur = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--parY')) || 0;
+      let next = cur + delta * 0.25;
+      next = Math.max(-18, Math.min(18, next));
+      document.documentElement.style.setProperty('--parY', `${next}px`);
+
+      clearTimeout(onScroll._t);
+      onScroll._t = setTimeout(() => {
+        document.documentElement.style.setProperty('--parY', `0px`);
+      }, 80);
+    }
+    window.addEventListener("scroll", onScroll, { passive:true });
+
+    /* ========= Particles ========= */
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d", { alpha:true });
+
+    let W,H,dpr;
+    function resize(){
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.width  = Math.floor(window.innerWidth * dpr);
+      H = canvas.height = Math.floor(window.innerHeight * dpr);
+      canvas.style.width  = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+    }
+    window.addEventListener("resize", resize, { passive:true });
+    resize();
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const N = prefersReduced ? 0 : (window.innerWidth < 600 ? 26 : 40);
+
+    const parts = Array.from({length:N}, () => ({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: (Math.random()*2.6 + 0.9) * dpr,
+      vx:(Math.random()*0.30 + 0.06) * dpr,
+      vy:(Math.random()*0.22 + 0.05) * dpr,
+      a: Math.random()*0.30 + 0.15
+    }));
+
+    function draw(){
+      if(prefersReduced) return;
+      ctx.clearRect(0,0,W,H);
+
+      const isDark = root.getAttribute("data-theme")==="dark";
+      const col = isDark ? "244,241,232" : "94,83,67";
+
+      for(const p of parts){
+        p.x += p.vx;
+        p.y += p.vy;
+        if(p.x > W+60) p.x = -60;
+        if(p.y > H+60) p.y = -60;
+
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(${col},${p.a})`;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    /* ========= Optional background video loader (bg.mp4) ========= */
+    (async function(){
+      const v = document.getElementById("bgVideo");
+      try{
+        const res = await fetch("images/bg.mp4", { method:"HEAD" });
+        if(!res.ok) return;
+        v.src = "images/bg.mp4";
+        v.style.display = "block";
+      }catch(e){}
+    })();
+
+    /* ========= Portfolio sections (scroll rows + arrow buttons) ========= */
+    function makeList(prefix, count, ext="jpg"){
+      const arr = [];
+      for(let i=1;i<=count;i++){
+        const n = String(i).padStart(2,"0");
+        arr.push(`images/${prefix}${n}.${ext}`);
+      }
+      return arr;
+    }
+
+    const sections = [
+      { title: "Sling Bags (Crochet)", badge: "CROCHET", files: makeList("bag-", 2) },
+      { title: "Bunny (Single)", badge: "CROCHET", files: makeList("bunny-single-", 2) },
+      { title: "Mat cum Rose Bouquet (Small)", badge: "CROCHET", files: makeList("bouquet-", 3) },
+      { title: "Bunny + Simple Heart", badge: "CROCHET", files: ["images/bunny-heart-simple-01.jpg"] },
+      { title: "Simple Heart", badge: "CROCHET", files: ["images/heart-01.jpg"] },
+      { title: "Bunny + Heart (Rose Stem)", badge: "CROCHET", files: makeList("bunny-heart-rose-", 2) },
+      { title: "Tortoise", badge: "CROCHET", files: makeList("tortoise-", 3) },
+      { title: "Teddy", badge: "CROCHET", files: ["images/teddy-01.jpg"] },
+      { title: "Drawings", badge: "DRAWING", files: makeList("drawing-", 10) },
+      { title: "Packaging", badge: "PACK", files: makeList("packaging-", 3) },
+    ];
+
+    const portfolio = document.getElementById("portfolio");
+
+    function makeSectionDom(s, idx){
+      const sec = document.createElement("section");
+      sec.className = "section reveal";
+
+      const head = document.createElement("div");
+      head.className = "sectionHead";
+
+      const left = document.createElement("div");
+      left.className = "sectionHeadLeft";
+      left.innerHTML = `<h2>${s.title}</h2><p class="subNote">Browse with arrows or swipe</p>`;
+
+      const arrows = document.createElement("div");
+      arrows.className = "arrows";
+      arrows.innerHTML = `
+        <button class="arrowBtn" type="button" aria-label="Scroll left" data-dir="-1">‹</button>
+        <button class="arrowBtn" type="button" aria-label="Scroll right" data-dir="1">›</button>
+      `;
+
+      head.appendChild(left);
+      head.appendChild(arrows);
+
+      const strip = document.createElement("div");
+      strip.className = "strip";
+      strip.setAttribute("data-strip", String(idx));
+
+      s.files.forEach((file, i) => {
+        const tile = document.createElement("article");
+        tile.className = "tile";
+        tile.innerHTML = `
+          <div class="badge">${s.badge}</div>
+          <img class="tileImg" src="${file}" alt="${s.title} ${i+1}">
+          <div class="tileBody">
+            <p class="tileTitle">${s.title}</p>
+            <div class="meta">
+              <span class="pill">${i+1} / ${s.files.length}</span>
+            </div>
+          </div>
+        `;
+        strip.appendChild(tile);
+      });
+
+      arrows.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const dir = Number(btn.getAttribute("data-dir"));
+          const card = strip.querySelector(".tile");
+          const step = (card ? card.getBoundingClientRect().width : 280) + 12;
+          strip.scrollBy({ left: dir * step, behavior: "smooth" });
+
+          strip.animate(
+            [{ transform: "translateY(0px)" }, { transform: "translateY(-2px)" }, { transform: "translateY(0px)" }],
+            { duration: 260, easing: "cubic-bezier(.2,.8,.2,1)" }
+          );
+        });
+      });
+
+      let t;
+      strip.addEventListener("scroll", () => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          const tiles = Array.from(strip.querySelectorAll(".tile"));
+          if(!tiles.length) return;
+          const leftEdge = strip.getBoundingClientRect().left;
+          let best = tiles[0], bestDist = Infinity;
+          for(const tile of tiles){
+            const dist = Math.abs(tile.getBoundingClientRect().left - leftEdge);
+            if(dist < bestDist){ bestDist = dist; best = tile; }
+          }
+          best.scrollIntoView({ behavior:"smooth", inline:"start", block:"nearest" });
+        }, 120);
+      }, { passive:true });
+
+      sec.appendChild(head);
+      sec.appendChild(strip);
+      return sec;
+    }
+
+    sections.forEach((s, idx) => {
+      portfolio.appendChild(makeSectionDom(s, idx));
+    });
+
+    // observe the newly added reveal elements
+    document.querySelectorAll("#portfolio .reveal").forEach(el => io.observe(el));
+
+    // ✅ IMPORTANT: after portfolio is injected (DOM height changes), force top again
+    setTimeout(forceTop, 0);
+  </script>
+</body>
+</html>
